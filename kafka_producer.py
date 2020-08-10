@@ -20,7 +20,7 @@ column_3 = None
 def get_subreddit_detail(search, payload):
 	token = 'bearer ' + reddit_api.token
 	base_url = 'https://oauth.reddit.com'
-	headers = {'Authorization' : token, 'User-Agent' : 'etl-source by ' + config['api-info']['username']}
+	headers = {'Authorization' : token, 'User-Agent' : config['api-info']['app_name'] + ' by ' + config['api-info']['username']}
 	response = requests.get(base_url + search, headers=headers, params=payload)
 	values = response.json()
 
@@ -52,12 +52,11 @@ def get_subreddit_detail(search, payload):
 	return json_message, last_item
 
 count = 0
-#while reddit_api.check_token():
-while count < 2:
+while reddit_api.check_token():
 	if count == 0:
-		json_message, last_item = get_subreddit_detail(search='/r/buildapcsales/hot', payload={'g': 'US', 'limit': 10})
+		json_message, last_item = get_subreddit_detail(search='/r/buildapcsales/hot', payload={'g': 'US', 'limit': 100})
 	if count >= 1:
-		json_message, last_item = get_subreddit_detail(search='/r/buildapcsales/hot', payload={'after': last_item, 'g': 'US', 'limit': 10})
+		json_message, last_item = get_subreddit_detail(search='/r/buildapcsales/hot', payload={'after': last_item, 'g': 'US', 'limit': 100})
 
 	for i in range(len(json_message)):
 		producer.send(kafka_topic_name, json_message)
@@ -65,23 +64,7 @@ while count < 2:
 		print("Wait for 2 seconds ... ")
 		time.sleep(2)
 
-	count += 1
-print("end")
+	if count == 10:
+		break
 
-"""
-GOAL:
-
-Take 100 items per request from subreddit
-- Check if the token is 200 and continue, this can be done using a with statement
-- Avoid stickied post with an if statement:
-	values['data']['children'][i]['data']['stickied'] == True
-- Get whatever relevant information for that post, but place into a json format
-- Want to do this iteratively and send to the kafka producer with a time.sleep in between messages
-
-After a requests is completed and sent to the producer request information after
-the last item using:
-	values['data']['children'][i]['data']['name']
-
-Note: Stay below 30 requests per minute
-"""
-
+print("Publishing Stopped")

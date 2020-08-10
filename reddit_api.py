@@ -17,7 +17,7 @@ def check_token():
 					headers={'user-agent': 'etl-source by ' + config['api-info']['username']}))
 	token = 'bearer ' + access_token
 	base_url = 'https://oauth.reddit.com'
-	headers = {'Authorization' : token, 'User-Agent' : 'etl-source by ' + config['api-info']['username']}
+	headers = {'Authorization' : token, 'User-Agent' : config['api-info']['app_name'] + ' by ' + config['api-info']['username']}
 	response = requests.get(base_url + '/api/v1/me', headers=headers)
 	status = response.status_code
 
