@@ -1,4 +1,4 @@
-# Data Pipeline for \r\buildapcsale
+# Data Pipeline for \r\buildapcsales
 A data pipeline for PC part data collect via Reddit's API while using Apache Spark and Kafka for data pipeline streaming.
 
 There are three parts in this project.
