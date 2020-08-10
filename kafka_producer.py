@@ -6,16 +6,11 @@ import time
 config = configparser.ConfigParser()
 config.read('api.cfg')
 
-bootstrap_servers = 'localhost'
-kafka_topic_name = 'api_topic'
+bootstrap_servers = 'localhost:9093'
+kafka_topic_name = 'reddit-posts'
 
-#producer = KafkaProducer(bootstrap_servers=bootstrap_servers, 
-#						 value_serializer=lambda v : json.dumps.encode('utf-8'))
-
-json_message = None
-column_1 = None
-column_2 = None
-column_3 = None
+producer = KafkaProducer(bootstrap_servers=bootstrap_servers, 
+						 value_serializer=lambda v : json.dumps.encode('utf-8'))
 
 def get_subreddit_detail(search, payload):
 	token = 'bearer ' + reddit_api.token
