@@ -9,8 +9,7 @@ config.read('api.cfg')
 bootstrap_servers = 'localhost:9093'
 kafka_topic_name = 'reddit-posts'
 
-producer = KafkaProducer(bootstrap_servers=bootstrap_servers, 
-						 value_serializer=lambda v : json.dumps.encode('utf-8'))
+producer = KafkaProducer(bootstrap_servers=bootstrap_servers, value_serializer=lambda v : json.dumps.encode('utf-8'))
 
 def get_subreddit_detail(search, payload):
 	token = 'bearer ' + reddit_api.token
